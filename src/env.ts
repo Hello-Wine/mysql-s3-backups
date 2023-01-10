@@ -5,9 +5,11 @@ export const env = envsafe({
   AWS_SECRET_ACCESS_KEY: str(),
   AWS_S3_BUCKET: str(),
   AWS_S3_REGION: str(),
-  BACKUP_DATABASE_URL: str({
-    desc: 'The connection string of the database to backup.'
-  }),
+  BACKUP_DATABASE_USER: str(),
+  BACKUP_DATABASE_PASSWORD: str(),
+  BACKUP_DATABASE_HOST: str(),
+  BACKUP_DATABASE_NAME: str(),
+  BACKUP_DATABASE_PORT: str(),
   BACKUP_CRON_SCHEDULE: str({
     desc: 'The cron schedule to run the backup on.',
     default: '0 5 * * *',

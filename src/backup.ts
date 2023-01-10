@@ -4,7 +4,7 @@ import { createReadStream } from "fs";
 
 import { env } from "./env";
 
-const uploadToS3 = async ({ name, path }: {name: string, path: string}) => {
+const uploadToS3 = async ({ name, path }: { name: string, path: string }) => {
   console.log("Uploading backup to S3...");
 
   const bucket = env.AWS_S3_BUCKET;
@@ -36,7 +36,7 @@ const dumpToFile = async (path: string) => {
 
   await new Promise((resolve, reject) => {
     exec(
-      `pg_dump ${env.BACKUP_DATABASE_URL} -F t | gzip > ${path}`,
+      `mysqldump -u ${env.BACKUP_DATABASE_USER} -p ${env.BACKUP_DATABASE_PASSWORD} -h ${env.BACKUP_DATABASE_HOST} --port ${env.BACKUP_DATABASE_PORT} --protocol=TCP --single-transaction --skip-lock-tables ${env.BACKUP_DATABASE_NAME} | gzip > ${path}`,
       (error, stdout, stderr) => {
         if (error) {
           reject({ error: JSON.stringify(error), stderr });
@@ -56,11 +56,11 @@ export const backup = async () => {
 
   let date = new Date().toISOString()
   const timestamp = date.replace(/[:.]+/g, '-')
-  const filename = `backup-${timestamp}.tar.gz`
+  const filename = `backup-mysql-${timestamp}.tar.gz`
   const filepath = `/tmp/${filename}`
 
   await dumpToFile(filepath)
-  await uploadToS3({name: filename, path: filepath})
+  await uploadToS3({ name: filename, path: filepath })
 
   console.log("DB backup complete...")
 }
