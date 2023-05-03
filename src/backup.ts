@@ -36,7 +36,7 @@ const dumpToFile = async (path: string) => {
 
   await new Promise((resolve, reject) => {
     exec(
-      `mysqldump -u ${env.BACKUP_DATABASE_USER} -p ${env.BACKUP_DATABASE_PASSWORD} -h ${env.BACKUP_DATABASE_HOST} --port ${env.BACKUP_DATABASE_PORT} --protocol=TCP --single-transaction --skip-lock-tables ${env.BACKUP_DATABASE_NAME} | gzip > ${path}`,
+      `mysqldump -u ${env.BACKUP_DATABASE_USER} -p ${env.BACKUP_DATABASE_PASSWORD} -h ${env.BACKUP_DATABASE_HOST} --port ${env.BACKUP_DATABASE_PORT} --protocol=TCP --single-transaction --skip-lock-tables | gzip > ${path}`,
       (error, stdout, stderr) => {
         if (error) {
           reject({ error: JSON.stringify(error), stderr });
